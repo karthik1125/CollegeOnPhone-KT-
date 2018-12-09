@@ -18,12 +18,12 @@ import logo from './assets/images/logo.png';
 const moment = require('moment');
 const axios = require('axios');
 
-export default class Events extends React.Component {
+export default class ClassReschedules extends React.Component {
 //   static propTypes = {
 //     navigation: NavigationType.isRequired,
 //   };
   static navigationOptions = {
-    title: 'Events'.toUpperCase(),
+    title: 'ClassReschedules'.toUpperCase(),
   };
 
   state = {
@@ -40,20 +40,58 @@ export default class Events extends React.Component {
       //console.log("data",data.data);
       this.setState({data:data.data.reverse()});
   }
+
+  _retrieveData2 =async(value) => {
+    try {
+        const value2 =  await AsyncStorage.getItem('data');
+        if(value2 !==null){
+            let self=this;
+            let data2 = JSON.parse(value2);
+            console.log(data2,"asdafkljgkhiwe")
+            console.log(data2.student,'asdasdasdasdasda2')
+            // console.log(value2["student"]["Student_ID"],'asdasdasdasdasda1')
+            // console.log(value2["student"][0],'asdasdasdasdasda2')
+            // console.log(value2["student"][0]["Student_ID"],'asdasdasdasdasda3')
+            let body ={
+                'stu_id':'S'+String(data2.student[0]["Student_ID"])
+            }
+            console.log("sid",body);
+    
+            console.log("inside callAPI");
+
+            axios({method:"post",url:`${value}/api/post_get_mix_mapper_classreschedules_course/`,data:[body]}).then(res =>{
+                    console.log("response status of classReschedules",res.data);
+                    self.cardData(res);
+              });
+
+          //   axios.post(`${value}/api/post_get_mix_mapper_preclassreq_course/`,body).then(res =>{
+          //       console.log("response status of preClassReq",res.data);
+          //      // self.cardData(res);
+          // });
+    
+        //      axios({method:'post',
+        //       url:`${value}/api/post_get_mix_mapper_preclassreq_course/`,
+        //       data:[body]  }).then(res =>{
+        //         console.log("response status",res.data);
+        //        // self.cardData(res);
+        //   });
+        }
+     } catch (error) {
+       // Error retrieving data
+       console.log("error in retrieval of post");
+     }
+  }
+
   callApi = (value) => {
-    let self=this;
-    console.log("inside callAPI");
-     axios.get(`${value}/api/events/`).then(res => {
-        console.log("response status",res.status);
-        self.cardData(res);
-      })
+      this._retrieveData2(value);
+   
   }
   _retrieveData =async() => {
     try {
       const value = await AsyncStorage.getItem('api');
       if (value !== null) {
           //console.log(data2);
-          console.log('url',`${value}/api/events/`);
+          //console.log('url',`${value}/api/events/`);
           this.callApi(value);
       }
      } catch (error) {
@@ -74,18 +112,25 @@ export default class Events extends React.Component {
       <RkCard rkType='blog' style={styles.card}>
         {/* <Image rkCardImg source={item.photo} /> */}
         <View rkCardHeader style={styles.content}>
-          <RkText style={styles.section} rkType='header3'>{item.event_name}</RkText>
+          <RkText style={styles.section} rkType='header3'>{item.course_name}</RkText>
         </View>
         <View rkCardContent>
           <View>
             <RkText rkType='primary3 mediumLine' numberOfLines={3}>{item.description}</RkText>
-            <RkText style={styles.section} rkType='primary3 mediumLine'>Happening On : {item.event_datetime}</RkText>
+            <RkText style={styles.section} rkType='header4'>Update</RkText>
+            <RkText style={styles.section} rkType='primary3 mediumLine'>New Time : {item.new_time}</RkText>
+            <RkText style={styles.section} rkType='primary3 mediumLine'>New Date : {item.new_date}</RkText>
+            <RkText style={styles.section} rkType='primary3 mediumLine'>New Room : {item.new_room}</RkText>
+            <RkText style={styles.section} rkType='header4'>Previously</RkText>
+            <RkText style={styles.section} rkType='primary3 mediumLine'>Old Time : {item.old_time}</RkText>
+            <RkText style={styles.section} rkType='primary3 mediumLine'>Old Date : {item.old_date}</RkText>
+            <RkText style={styles.section} rkType='primary3 mediumLine'>Old Room : {String(item.old_room)}</RkText>
           </View>
         </View>
         <View rkCardFooter>
           <View style={styles.userInfo}>
             <Avatar style={styles.avatar} rkType='circle small' img={logo} />
-            <RkText rkType='header6'>{`${item.event_type}`}</RkText>
+            {/* <RkText rkType='header6'>{`${item.event_type}`}</RkText> */}
           </View>
           <RkText rkType='secondary2 hintColor'>{item.post_time}</RkText>
         </View>

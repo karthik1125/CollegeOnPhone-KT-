@@ -12,18 +12,18 @@ import ClassReschedules from '../../classReschedules';
 import PreClassReq from '../../preClassReq';
 import FeeSchedules from '../../feeSchedules';
 import AssignPro from '../../assignments';
+import TimeTable from '../../timetable';
+import Marks from '../../marks';
 
 
 export class NavigationMenu extends React.Component {
-  static propTypes = {
-    navigation: NavigationType.isRequired,
-  };
+ 
   static navigationOptions = {
     title: 'Marks'.toUpperCase(),
   };
-  render = () => (
-    <CategoryMenu navigation={this.props.navigation} items={Routes.NavigationRoutes} />
-  );
+  render(){
+    return(<Marks />);
+  }
 }
 
 export class SocialMenu extends React.Component {
@@ -57,15 +57,15 @@ export class MessagingMenu extends React.Component {
 }
 
 export class DashboardMenu extends React.Component {
-  static propTypes = {
-    navigation: NavigationType.isRequired,
-  };
+  // static propTypes = {
+  //   navigation: NavigationType.isRequired,
+  // };
   static navigationOptions = {
     title: 'Timetable'.toUpperCase(),
   };
-  render = () => (
-    <CategoryMenu navigation={this.props.navigation} items={Routes.DashboardRoutes} />
-  );
+  render(){
+    return(<TimeTable />);
+  }
 }
 
 export class WalkthroughMenu extends React.Component {

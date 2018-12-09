@@ -17,13 +17,14 @@ import logo from './assets/images/logo.png';
 
 const moment = require('moment');
 const axios = require('axios');
+console.disableYellowBox = true;
 
-export default class Events extends React.Component {
+export default class Marks extends React.Component {
 //   static propTypes = {
 //     navigation: NavigationType.isRequired,
 //   };
   static navigationOptions = {
-    title: 'Events'.toUpperCase(),
+    title: 'Marks'.toUpperCase(),
   };
 
   state = {
@@ -36,9 +37,15 @@ export default class Events extends React.Component {
   onItemPressed = (item) => {
     //this.props.navigation.navigate('Article', { id: item.id });
   };
-  cardData = (data) =>{
+  cardData = (data,roll) =>{
+      let tempMarks =[];
+        for(let i=0; i<data.data.length;i++){
+            if(data.data[i]["Student_Id"] == roll){
+                tempMarks.push(data.data[i]);
+            }
+        }
       //console.log("data",data.data);
-      this.setState({data:data.data.reverse()});
+      this.setState({data:tempMarks});
   }
 
   _retrieveData2 =async(value) => {
@@ -59,9 +66,9 @@ export default class Events extends React.Component {
     
             console.log("inside callAPI");
 
-            axios({method:"post",url:`${value}/api/post_get_mix_mapper_preclassreq_course/`,data:[body]}).then(res =>{
+            axios({method:"get",url:"http://10.0.49.5:8010/sendmarks/"}).then(res =>{
                     console.log("response status of preClassReq",res.data);
-                    self.cardData(res);
+                    self.cardData(res,String(data2.student[0]["Student_ID"]));
               });
 
           //   axios.post(`${value}/api/post_get_mix_mapper_preclassreq_course/`,body).then(res =>{
@@ -112,12 +119,12 @@ export default class Events extends React.Component {
       <RkCard rkType='blog' style={styles.card}>
         {/* <Image rkCardImg source={item.photo} /> */}
         <View rkCardHeader style={styles.content}>
-          <RkText style={styles.section} rkType='header3'>{item.course_name}</RkText>
+          <RkText style={styles.section} rkType='header3'>{item.Academic_Course_Id}</RkText>
         </View>
         <View rkCardContent>
           <View>
-            <RkText rkType='primary3 mediumLine' numberOfLines={3}>{item.content}</RkText>
-            <RkText style={styles.section} rkType='primary3 mediumLine'>Needed on : {item.need_day}</RkText>
+            <RkText rkType='primary3 mediumLine' numberOfLines={3}>Weightage: {item.Marks_perc}</RkText>
+            <RkText style={styles.section} rkType='primary3 mediumLine'>Marks: {item.Marks}</RkText>
           </View>
         </View>
         <View rkCardFooter>
@@ -125,7 +132,7 @@ export default class Events extends React.Component {
             <Avatar style={styles.avatar} rkType='circle small' img={logo} />
             {/* <RkText rkType='header6'>{`${item.event_type}`}</RkText> */}
           </View>
-          <RkText rkType='secondary2 hintColor'>{item.post_time}</RkText>
+          <RkText rkType='secondary2 hintColor'>{item.Exam_Type}</RkText>
         </View>
       </RkCard>
     </TouchableOpacity>

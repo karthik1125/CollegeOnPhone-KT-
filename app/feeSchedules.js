@@ -18,17 +18,17 @@ import logo from './assets/images/logo.png';
 const moment = require('moment');
 const axios = require('axios');
 
-export default class Events extends React.Component {
-//   static propTypes = {
-//     navigation: NavigationType.isRequired,
-//   };
+
+export default class FeeSchedules extends React.Component {
+
   static navigationOptions = {
-    title: 'Events'.toUpperCase(),
+    title: 'Fee Schedules'.toUpperCase(),
   };
 
   state = {
     data: undefined,
     url:'',
+    temp:false,
   };
 
   extractItemKey = (item) => `${item.slno}`;
@@ -38,12 +38,12 @@ export default class Events extends React.Component {
   };
   cardData = (data) =>{
       //console.log("data",data.data);
-      this.setState({data:data.data.reverse()});
+      this.setState({data:data.data.reverse(),temp:true});
   }
-  callApi = (value) => {
+  callApi = async(value) => {
     let self=this;
     console.log("inside callAPI");
-     axios.get(`${value}/api/events/`).then(res => {
+     await axios.get(`${value}/api/feeschedules/`).then(res => {
         console.log("response status",res.status);
         self.cardData(res);
       })
@@ -53,7 +53,7 @@ export default class Events extends React.Component {
       const value = await AsyncStorage.getItem('api');
       if (value !== null) {
           //console.log(data2);
-          console.log('url',`${value}/api/events/`);
+          console.log('url',`${value}/api/feeschedules/`);
           this.callApi(value);
       }
      } catch (error) {
@@ -67,88 +67,102 @@ export default class Events extends React.Component {
   }
 
   renderItem = ({ item }) => (
+    
     <TouchableOpacity
-      delayPressIn={70}
-      activeOpacity={0.8}
-      onPress={() => this.onItemPressed(item)}>
-      <RkCard rkType='blog' style={styles.card}>
-        {/* <Image rkCardImg source={item.photo} /> */}
-        <View rkCardHeader style={styles.content}>
-          <RkText style={styles.section} rkType='header3'>{item.event_name}</RkText>
-        </View>
-        <View rkCardContent>
-          <View>
-            <RkText rkType='primary3 mediumLine' numberOfLines={3}>{item.description}</RkText>
-            <RkText style={styles.section} rkType='primary3 mediumLine'>Happening On : {item.event_datetime}</RkText>
-          </View>
-        </View>
-        <View rkCardFooter>
-          <View style={styles.userInfo}>
-            <Avatar style={styles.avatar} rkType='circle small' img={logo} />
-            <RkText rkType='header6'>{`${item.event_type}`}</RkText>
-          </View>
-          <RkText rkType='secondary2 hintColor'>{item.post_time}</RkText>
-        </View>
-      </RkCard>
-    </TouchableOpacity>
+    delayPressIn={70}
+    activeOpacity={0.8}
+    onPress={() => self.onItemPressed(item)}>
+    <RkCard rkType='blog' style={styles.card}>
+      {/* <Image rkCardImg source={item.photo} /> */}
+      <View rkCardHeader style={styles.content}>
+        <RkText style={styles.section} rkType='header3'>{item["title"]}</RkText>
+      </View>
+      <View rkCardContent>
+        <View>
+          <RkText rkType='primary3 mediumLine' numberOfLines={3}>{item["description"]}</RkText>
+          <RkText style={styles.section} rkType='primary3 mediumLine'>Due Date : {item["due_date"]}</RkText>
+          {/* <RkText style={styles.section} rkType='header4'>Update :</RkText>
+          <RkText style={styles.section} rkType='primary3 mediumLine'>Time : {item.new_time}</RkText>
+          <RkText style={styles.section} rkType='primary3 mediumLine'>Date : {item.new_date}</RkText>
+          <RkText style={styles.section} rkType='primary3 mediumLine'>Room : {item.new_room}</RkText>
+          <RkText style={styles.section} rkType='primary3 mediumLine'>Previously:</RkText>
+          <RkText style={styles.section} rkType='primary3 mediumLine'>Time : {item.old_time}</RkText>
+          <RkText style={styles.section} rkType='primary3 mediumLine'>Date : {item.old_date}</RkText>
+          <RkText style={styles.section} rkType='primary3 mediumLine'>Room : {item.old_room}</RkText> */}
 
-//     <TouchableOpacity
-//     delayPressIn={70}
-//     activeOpacity={0.8}
-//     //onPress={() => this.onItemPressed(item)}
-//     >
-//     <RkCard rkType='blog' style={styles.card}>
-//       {/* <Image rkCardImg source={item.photo} /> */}
-//       <View rkCardHeader style={styles.content}>
-//         <RkText style={styles.section} rkType='header4'>"NSS Event"</RkText>
-//       </View>
-//       <View rkCardContent>
-//         <View>
-//           <RkText rkType='primary3 mediumLine' numberOfLines={2}>"There will be a swacch Bharat Run"</RkText>
-//         </View>
-//       </View>
-//       <View rkCardFooter>
-//         <View style={styles.userInfo}>
-//           {/* <Avatar style={styles.avatar} rkType='circle small' img={item.user.photo} /> */}
-//           {/* <RkText rkType='header6'>{`${item.user.firstName} ${item.user.lastName}`}</RkText> */}
-//         </View>
-//         {/* <RkText rkType='secondary2 hintColor'>{moment().add(item.time, 'seconds').fromNow()}</RkText> */}
-//       </View>
-//     </RkCard>
-//   </TouchableOpacity>
+        </View>
+      </View>
+      <View rkCardFooter>
+        <View style={styles.userInfo}>
+          <Avatar style={styles.avatar} rkType='circle small' img={logo} />
+        </View>
+        <RkText rkType='secondary2 hintColor'>{item["studentdegree"]}</RkText>
+      </View>
+    </RkCard>
+  </TouchableOpacity>
+
+//   
   );
+  // render(){
+  //   let self=this;
+  //   return(
+  //     <View>
+  //       {self.state.data 
+  //       ? (<View>
+  //         {self.state.data.map(function(x,i){
+  //           {console.log(self.state.data[i]["description"])}
+  //         <TouchableOpacity
+  //         delayPressIn={70}
+  //         activeOpacity={0.8}
+  //         onPress={() => self.onItemPressed(self.state.data[i])}>
+  //         <RkCard rkType='blog' style={styles.card}>
+  //           {/* <Image rkCardImg source={item.photo} /> */}
+  //           <View rkCardHeader style={styles.content}>
+  //             <RkText style={styles.section} rkType='header3'>{self.state.data[i]["title  "]}</RkText>
+  //           </View>
+  //           <View rkCardContent>
+  //             <View>
+  //               <RkText rkType='primary3 mediumLine' numberOfLines={3}>{self.state.data[i]["description"]}</RkText>
+  //               <RkText style={styles.section} rkType='primary3 mediumLine'>Due Date : {self.state.data[i]["due_date"]}</RkText>
+  //               {/* <RkText style={styles.section} rkType='header4'>Update :</RkText>
+  //               <RkText style={styles.section} rkType='primary3 mediumLine'>Time : {item.new_time}</RkText>
+  //               <RkText style={styles.section} rkType='primary3 mediumLine'>Date : {item.new_date}</RkText>
+  //               <RkText style={styles.section} rkType='primary3 mediumLine'>Room : {item.new_room}</RkText>
+  //               <RkText style={styles.section} rkType='primary3 mediumLine'>Previously:</RkText>
+  //               <RkText style={styles.section} rkType='primary3 mediumLine'>Time : {item.old_time}</RkText>
+  //               <RkText style={styles.section} rkType='primary3 mediumLine'>Date : {item.old_date}</RkText>
+  //               <RkText style={styles.section} rkType='primary3 mediumLine'>Room : {item.old_room}</RkText> */}
+    
+  //             </View>
+  //           </View>
+  //           <View rkCardFooter>
+  //             <View style={styles.userInfo}>
+  //               <Avatar style={styles.avatar} rkType='circle small' img={logo} />
+  //             </View>
+  //             <RkText rkType='secondary2 hintColor'>{self.state.data[i]["studentdegree"]}</RkText>
+  //           </View>
+  //         </RkCard>
+  //       </TouchableOpacity>
+    
+  //       })}
+  //       </View>)
+  //       : (<RkText>Loading</RkText>)
+  //       }
+        
+  //     </View>
+  //   );
+  // }
 
   render = () => (
-//     <TouchableOpacity
-//     delayPressIn={70}
-//     activeOpacity={0.8}
-//     // onPress={() => this.onItemPressed(item)}
-//     >
-//     <RkCard rkType='blog' style={styles.card}>
-//       {/* <Image rkCardImg source={item.photo} /> */}
-//       <View rkCardHeader style={styles.content}>
-//         <RkText style={styles.section} rkType='header4'>"NSS Event"</RkText>
-//       </View>
-//       <View rkCardContent>
-//         <View>
-//           <RkText rkType='primary3 mediumLine' numberOfLines={2}>"There will be a swacch Bharat Run"</RkText>
-//         </View>
-//       </View>
-//       <View rkCardFooter>
-//         <View style={styles.userInfo}>
-//           {/* <Avatar style={styles.avatar} rkType='circle small' img={item.user.photo} /> */}
-//           {/* <RkText rkType='header6'>{`${item.user.firstName} ${item.user.lastName}`}</RkText> */}
-//         </View>
-//         {/* <RkText rkType='secondary2 hintColor'>{moment().add(item.time, 'seconds').fromNow()}</RkText> */}
-//       </View>
-//     </RkCard>
-//   </TouchableOpacity>
-    <FlatList
+    <View>
+      {this.state.data ?(<FlatList
       data={this.state.data}
       renderItem={this.renderItem}
       keyExtractor={this.extractItemKey}
       style={styles.container}
-    />
+    />):(<RkText>Loading</RkText>)}
+    </View>
+    
   );
 }
 

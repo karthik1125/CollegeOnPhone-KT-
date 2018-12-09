@@ -75,7 +75,7 @@ export default class App extends React.Component {
       console.log("error in storing");
     }
     try{
-      await AsyncStorage.setItem('api',"http://10.0.52.19:8000");
+      await AsyncStorage.setItem('api',"http://10.0.48.229:8080");
     }catch(error){
       console.log("error in api url storing");
     }
